@@ -31,3 +31,22 @@ def hello():
 - 旧版本兼容
 
 其他检测pep8可用包：`pylint`(检测更为严格)
+
+
+## 编码
+
+常用编码过程：
+![编码过程](http://pbn1d3gdg.bkt.clouddn.com/%E7%BC%96%E7%A0%81%E8%BF%87%E7%A8%8B.png)
+
+1.创建首页页面*Tasking*：
+
+- 创建首页应用
+- 合并着陆页
+- 编写单元测试
+- 使用Selenium进行功能测试
+- 编写自动测试的Fabric任务
+
+**小步前进**，每一步都有明确任务和衡量指标，完成一步提交一次代码，有问题可随时回滚。
+
+[SMRT原则](http://wiki.mbalib.com/wiki/SMART原则)，对更大的目标管理方法。（S=Specific(明确性)，M=Measurable(衡量性)，A=Attainable(可实现性)，R=Relevant(相关性)，T=Time(时限性)）
+
