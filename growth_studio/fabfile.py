@@ -23,6 +23,20 @@ def runserver():
 
 
 @task
+def deploy(para="add file"):
+    """upload packages for git"""
+    local("git add . && git commit -m \"%s\"" % para)
+    local("git push -u origin master")
+
+
+@task
+def tag_version(version):
+    """Tag New Version"""
+    local("git tag %s" % version)
+    local("git push origin %s" % version)
+
+
+@task
 def pep8():
     """Check the project for PEP8 compliance using pep8"""
     local('pep8 .')
