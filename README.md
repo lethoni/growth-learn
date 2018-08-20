@@ -50,3 +50,41 @@ def hello():
 
 [SMRT原则](http://wiki.mbalib.com/wiki/SMART原则)，对更大的目标管理方法。（S=Specific(明确性)，M=Measurable(衡量性)，A=Attainable(可实现性)，R=Relevant(相关性)，T=Time(时限性)）
 
+
+
+## 使用Selenium测试
+**安装** pip install selenium
+
+Selenium是一个Web应用程序测试框架，它可以让浏览器自动化地执行任务,且可以模拟真实人为操作。Selenium使用浏览器需要对应驱动，Chrome使用[chromedriver](http://seleniumhq.github.io/selenium/docs/api/py/webdriver_chrome/selenium.webdriver.chrome.webdriver.html#module-selenium.webdriver.chrome.webdriver)，Firefox使用[geckodriver](https://github.com/mozilla/geckodriver/releases)，需要放置于对应浏览器根目录。
+> PS: 如路径错误( selenium.common.exceptions.WebDriverException: Message: ‘ChromeDriver executable needs to be available in the path.)则配置chromedriver路径：`driver = webdriver.Chrome('/path/to/chromedriver')`
+
+*四阶段测试* ：
+1. Setup -- 数据准备和初始化
+2. Execute -- 执行阶段做好验证结果前工作
+3. Verify -- 验证返回的结果是否和预期一致
+4. Tear Down -- 收尾工作，关闭浏览器、清除测试数据
+
+*测试的好处*：
+- 保证现有代码功能都正常
+- 帮组找到代码中的bug
+- 编写出长度短小的代码
+- 为重构代码打下基础
+
+**测试金字塔**：
+
+组成(金字塔由下至上)：
+- 单元测试(针对**程序模块**进行正确性检验，最底层，测试最多)
+- 服务测试(不仅测试提供的服务，也测试依赖第三方提供的服务，可使用提供API的Mock Server)
+- UI测试(主要对功能测试，尽可能将此层级测试网下层移动，节约测试时间)
+
+**如何测试**：
+1. 了解测试目的（Why）
+2. 要测哪些内容（What）（单元测试中测试函数功能，服务测试中测试服务，UI测试中测试业务）
+3. 要如何进行测试（How）
+ - 状态测试（针对结果）
+ - 行为测试（针对执行过程）(不仅测试提供的服务，也测试依赖第三方提供的服务)
+
+ 
+
+
+

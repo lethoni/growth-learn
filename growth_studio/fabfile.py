@@ -37,6 +37,12 @@ def tag_version(version):
 
 
 @task
+def test():
+    """Run Test"""
+    local("python manage.py test")
+
+
+@task
 def pep8():
     """Check the project for PEP8 compliance using pep8"""
     local('pep8 .')
