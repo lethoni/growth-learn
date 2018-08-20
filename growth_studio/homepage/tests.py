@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.core.urlresolvers import resolve
 from selenium import webdriver
 
-from homepage.views import index
+from .views import index
 
 
 # Create your tests here.
