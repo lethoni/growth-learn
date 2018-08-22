@@ -56,7 +56,11 @@ def hello():
 **安装** pip install selenium
 
 Selenium是一个Web应用程序测试框架，它可以让浏览器自动化地执行任务,且可以模拟真实人为操作。Selenium使用浏览器需要对应驱动，Chrome使用[chromedriver](http://seleniumhq.github.io/selenium/docs/api/py/webdriver_chrome/selenium.webdriver.chrome.webdriver.html#module-selenium.webdriver.chrome.webdriver)，Firefox使用[geckodriver](https://github.com/mozilla/geckodriver/releases)，需要放置于对应浏览器根目录。
-> PS: 如路径错误( selenium.common.exceptions.WebDriverException: Message: ‘ChromeDriver executable needs to be available in the path.)则配置chromedriver路径：`driver = webdriver.Chrome('/path/to/chromedriver')`
+> PS: 
+> 1. 如路径错误( selenium.common.exceptions.WebDriverException: Message: ‘ChromeDriver executable needs to be available in the path.)则配置chromedriver路径：`driver = webdriver.Chrome('/path/to/chromedriver')`
+> 2. [Chrome](https://www.chromedownloads.net/chrome64win/)历史版本下载
+> 3. 使用webdriver出现的问题：[18796:1808:0730/131103.313:ERROR:install_util.cc(600)] Failed to read HKLM\SOFTWARE\Policies\Google\Chrome\MachineLevelUserCloudPolicyEnrollmentToken: 系统找不到指定的文件。 (0x2) 1,注册表导致 regedit.exe-HKEY_LOCAL_MACHINE-SOFTWARE-Policies-google-Chrome-右键新建字符串值(s):MachineLevelUserCloudPolicyEnrollmentToken 2,确认webdriver是否匹配[修复方法](https://www.cnblogs.com/cthon/p/9390095.html)
+
 
 *四阶段测试* ：
 1. Setup -- 数据准备和初始化
