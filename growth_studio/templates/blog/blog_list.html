@@ -1,11 +1,21 @@
-{% extends "blog/blog_base.html" %}
+{% extends "base.html" %}
 
 {% block title %}Growth Studio - Blog {% endblock %}
 
 {% block content %}
-{% for blog in blogs %}
-    <h2><a href="{{ blog.slug }}.html">{{ blog.title }}</a></h2>
-    <p>{{ blog.body|slice:":80" }}</p>
-    <p>{{ blog.posted }} - By {{ blog.author }}</p>
-{% endfor %}
+    <div class="container blog-list">
+    <div class="row">
+        {% if blogs %}
+            {% for blog in blogs %}
+                <div class="col-sm-4">
+                <h2><a href="{{ blog.slug }}.html">{{ blog.title }}</a></h2>
+                    <p>{{ blog.body|slice:":80" }}</p>
+                    <p>{{ blog.posted }} - By {{ blog.author }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>当前还没有博客</p>
+        {% endif %}
+    </div>
+    </div>
 {% endblock %}
