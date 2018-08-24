@@ -147,7 +147,7 @@ Selenium是一个Web应用程序测试框架，它可以让浏览器自动化地
 - 从某个服务器上下载软件包
 - 使用包管理工具直接安装
 
-**线上部署工具**:
+**线上部署工具**：
 用[Gunicorn](http://docs.gunicorn.org/en/stable/settings.html)提供应用的多线程服务，用Nginx承担静态文件等请求(Nginx还可承担安全任务，如反爬虫，限制IP访问等)，使用Nginx反向台历HTTP请求给Gunicorn，由Gunicorn再将请求交给web应用程序。
 运行 `nohup gunicorn -w 2 -b unix:/tmp/growth_studio.sock growth_studio.wsgi:application&`(nohup..&后台运行)Gunicorn与Django为WSGI通信，与Nginx使用socket套接字通信。
 
@@ -169,12 +169,56 @@ Selenium是一个Web应用程序测试框架，它可以让浏览器自动化地
  - 启动 `circusd circus.ini` (后台参数 --daemon)
   
 >circus.ini :
-[watcher:growth_studio]
-cmd = gunicorn --workers=2 --bind unix:/tmp/growth-studio.sock growth_studio.wsgi:application
-working_dir = /home/myproject/growth-studio
-copy_env = True
-virtualenv = /home/myproject/venv
-send_hup = True
+>[watcher:growth_studio]
+>cmd = gunicorn --workers=2 --bind unix:/tmp/growth-studio.sock >growth_studio.wsgi:application
+>working_dir = /home/myproject/growth-studio
+>copy_env = True
+>virtualenv = /home/myproject/venv
+>send_hup = True
   
 ![supervisord配置方法](http://pbn1d3gdg.bkt.clouddn.com/supervisord%E9%85%8D%E7%BD%AE.png)
 ![Circus配置方法](http://pbn1d3gdg.bkt.clouddn.com/Circus%E9%83%A8%E7%BD%B2.png)
+
+
+**开机启动web应用**：
+使用`Upstart`替代传统init系统初始化程序。
+
+>/etc/init/circus.conf
+>
+>description "circusd"
+>
+>start on filesystem and net-device-up IFACE=lo
+>stop on runlevel [016]
+>
+>exec /usr/local/bin/circusd /etc/circus/circusd.ini
+
+`stat on`表示服务运行的时机：在文件系统和本地回环IP网络已经准备就绪后再执行。`stop on`说明服务将会在运行级别0、1、6（关机、无网络、重启）时停止。最后的`exec`才是我们的运行脚本。
+
+**部署检查清单**：
+部署工具检查使用[Deployment checklist](https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/) :
+检测 `python manage.py check --deploy`
+- 必须设置正确的安全级别
+- 为不同的环境创建不同的配置
+- 允许额外的安全功能
+- 允许性能优化
+- 提交错误报告
+
+*关于HTTPS使用设置*(不适用不开启)：
+1.COOKIE设置：
+  ESSION_COOKIE_SECURE = True
+  CSRF_COOKIE_SECURE = True
+  CSRF_COOKIE_HTTPONLY= True
+2.安全设置：
+  SECURE_HSTS_SECONDS = True
+  SECURE_SSL_REDIRECT = True
+  SECURE_CONTENT_TYPE_NOSNIFF = True
+  SECURE_BROWSER_XSS_FILTER = True
+  SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+*deploy需注意危险内容*：
+- 关闭调试模式。DEBUG=False
+- 设置加密密钥，SECRET_KEY。重新生成
+※ALOWED_HOSTS只有列表中的host才能访问，用于限定请求的host值，以防黑客构造包来发送请求。ALLOWED_HOSTS = ['127.0.0.1']
+
+
+
