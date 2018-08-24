@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'zb4j5%m7y6q_9@h5#rf4%&_-eu$)m*wm+4sfb=fgt4mvhew$=1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -126,3 +126,17 @@ STATIC_ROOT = 'C:\Users\lhz\Documents\growthLearn\static'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static/"),
 )
+
+
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_HSTS_SECONDS = True
+#SECURE_CONTENT_TYPE_NOSNIFF = True
+#SECURE_BROWSER_XSS_FILTER = True
+#SECURE_SSL_REDIRECT = True
+#SESSION_COOKIE_SECURE = True
+#CSRF_COOKIE_SECURE = True
+#CSRF_COOKIE_HTTPONLY = True
+X_FRAME_OPTIONS = 'DENY'
+ALLOWED_HOSTS = [
+    '127.0.0.1'
+]
