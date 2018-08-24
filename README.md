@@ -149,16 +149,32 @@ Selenium是一个Web应用程序测试框架，它可以让浏览器自动化地
 
 **线上部署工具**:
 用[Gunicorn](http://docs.gunicorn.org/en/stable/settings.html)提供应用的多线程服务，用Nginx承担静态文件等请求(Nginx还可承担安全任务，如反爬虫，限制IP访问等)，使用Nginx反向台历HTTP请求给Gunicorn，由Gunicorn再将请求交给web应用程序。
-运行 `nohup gunicorn -w 2 -b unix:/tmp/growth_studio.sock growth_studio.wsgi:application&`(nohup..&后台运行)Gunicorn与Django为WSGI通信，与Nginx使用socket套接字通信
+运行 `nohup gunicorn -w 2 -b unix:/tmp/growth_studio.sock growth_studio.wsgi:application&`(nohup..&后台运行)Gunicorn与Django为WSGI通信，与Nginx使用socket套接字通信。
 
 1. Nginx,高性能的HTTP和反向代理服务器
- - 安装 `sudo apt-get install nginx` 配置 `/etc/nginx/site-available/default`
- - 测试 `sudo nginx -t` 启动 `/usr/sbin/nginx -c /etc/nginx/nginx.conf` 
- - 重启 `/usr/sbin/nginx -s reload` 停止 `/usr/sbin/nginx stop`
-2. Gunicorn, WSGI服务器
+ - 安装 `sudo apt-get install nginx`
+ - 配置 `/etc/nginx/site-available/default`
+ - 测试 `sudo nginx -t`
+ - 启动 `/usr/sbin/nginx -c /etc/nginx/nginx.conf` 
+ - 重启 `/usr/sbin/nginx -s reload`
+ - 停止 `/usr/sbin/nginx -s stop`
+2. Gunicorn, WSGI服务器(其他：Chaussette)
  - 安装 `pip install gunicorn`
  - 启动(项目根目录) `gunicorn -w 3 -b 127.0.0.1:8080 project.wsgi:application`(-w INT 开多个进程， -b ADDRESS)
  - 静态文件收集管理 `python manage.py collectstatic`
-3. Supervisor, 进程守护工具
-
-
+3. ~~Supervisor, 进程守护工具(Python 2.x编写)~~
+4. Circus, 进程管理工具(Python3)
+ - 安装(需退出虚拟环境) `pip install circus`
+ - 添加配置文件 `circus.ini`
+ - 启动 `circusd circus.ini` (后台参数 --daemon)
+  
+>circus.ini :
+[watcher:growth_studio]
+cmd = gunicorn --workers=2 --bind unix:/tmp/growth-studio.sock growth_studio.wsgi:application
+working_dir = /home/myproject/growth-studio
+copy_env = True
+virtualenv = /home/myproject/venv
+send_hup = True
+  
+![supervisord配置方法](http://pbn1d3gdg.bkt.clouddn.com/supervisord%E9%85%8D%E7%BD%AE.png)
+![Circus配置方法](http://pbn1d3gdg.bkt.clouddn.com/Circus%E9%83%A8%E7%BD%B2.png)
