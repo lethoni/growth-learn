@@ -169,11 +169,19 @@ Selenium是一个Web应用程序测试框架，它可以让浏览器自动化地
  - 启动 `circusd circus.ini` (后台参数 --daemon)
   
 >circus.ini :
+>
 >[watcher:growth_studio]
->cmd = gunicorn --workers=2 --bind unix:/tmp/growth-studio.sock >growth_studio.wsgi:application
+>
+>cmd = gunicorn --workers=2 --bind unix:/tmp/growth-studio.sock 
+>
+>growth_studio.wsgi:application
+>
 >working_dir = /home/myproject/growth-studio
+>
 >copy_env = True
+>
 >virtualenv = /home/myproject/venv
+>
 >send_hup = True
   
 ![supervisord配置方法](http://pbn1d3gdg.bkt.clouddn.com/supervisord%E9%85%8D%E7%BD%AE.png)
@@ -205,20 +213,36 @@ Selenium是一个Web应用程序测试框架，它可以让浏览器自动化地
 
 *关于HTTPS使用设置*(不适用不开启)：
 1.COOKIE设置：
-  ESSION_COOKIE_SECURE = True
-  CSRF_COOKIE_SECURE = True
-  CSRF_COOKIE_HTTPONLY= True
+  ESSION_COOKIE_SECURE = True;
+  CSRF_COOKIE_SECURE = True;
+  CSRF_COOKIE_HTTPONLY= True;
 2.安全设置：
-  SECURE_HSTS_SECONDS = True
-  SECURE_SSL_REDIRECT = True
-  SECURE_CONTENT_TYPE_NOSNIFF = True
-  SECURE_BROWSER_XSS_FILTER = True
-  SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+  SECURE_HSTS_SECONDS = True;
+  SECURE_SSL_REDIRECT = True;
+  SECURE_CONTENT_TYPE_NOSNIFF = True;
+  SECURE_BROWSER_XSS_FILTER = True;
+  SECURE_HSTS_INCLUDE_SUBDOMAINS = True;
 
 *deploy需注意危险内容*：
 - 关闭调试模式。DEBUG=False
 - 设置加密密钥，SECRET_KEY。重新生成
-※ALOWED_HOSTS只有列表中的host才能访问，用于限定请求的host值，以防黑客构造包来发送请求。ALLOWED_HOSTS = ['127.0.0.1']
+
+※ALOWED_HOSTS只有列表中的host才能访问，用于限定请求的host值，以防黑客构造包来发送请求。如ALLOWED_HOSTS = ['127.0.0.1']，如不限制为['*']
+
+**配置管理**：
+部署服务器有许多的配置文件内容是相互依赖的，如Gunicorn与Nginx、Nginx与Web应用的Static等。因此，我们需要使用版本控制来管理这些配置文件。可考虑用Git，但须考虑密钥、Token等内容的安全。
+不同的环境里使用不同点的配置文件方法，可在代码库内为开发环境创建一个配置文件，在额外的安全环境里创建额外的配置文件，之后，在settings.py内引入。如下：
+```
+try
+	from .local_settings import *
+except ImportError as e:
+	pass
+```
+
+而local_settings.py文件内可配置本地开发环境，在产品环境下配置不同项即可，保证便利和安全性。
+
+
+
 
 
 

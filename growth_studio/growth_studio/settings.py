@@ -25,7 +25,7 @@ SECRET_KEY = 'zb4j5%m7y6q_9@h5#rf4%&_-eu$)m*wm+4sfb=fgt4mvhew$=1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -137,6 +137,3 @@ STATICFILES_DIRS = (
 #CSRF_COOKIE_SECURE = True
 #CSRF_COOKIE_HTTPONLY = True
 X_FRAME_OPTIONS = 'DENY'
-ALLOWED_HOSTS = [
-    '127.0.0.1'
-]
