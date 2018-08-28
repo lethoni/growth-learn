@@ -141,6 +141,20 @@ Selenium是一个Web应用程序测试框架，它可以让浏览器自动化地
 - 对系统及应用服务进行配置
 - 启动和停止系统服务
 
+**Linux下SSH服务器端工具**：
+安装：`sudo apt-get install openssh-server`
+启动：`/etc/init.d/ssh start`
+
+Windows下使用[PuTTY](https://www.putty.org/)软件登陆SSH：
+配置文件设置：
+>如不修改默认使用KEY文件,用户名登陆会出现错误(PuTTY error: "No supported authentication methods available")，这里解决这个问题。
+```
+/etc/ssh/sshd_config
+
+PasswordAuthentication yes
+PermitRootLogin yes  #默认prohibit-passwd
+```
+
 在服务器上运行runserver，首先需要将软件包放置到服务器上，可使用下列方法：
 - 使用git将代码clone到服务器(不推荐，存在安装隐患，如：google - index of/.git)
 - 使用scp上次软件包
@@ -234,13 +248,74 @@ Selenium是一个Web应用程序测试框架，它可以让浏览器自动化地
 不同的环境里使用不同点的配置文件方法，可在代码库内为开发环境创建一个配置文件，在额外的安全环境里创建额外的配置文件，之后，在settings.py内引入。如下：
 ```
 try
-	from .local_settings import *
+    from .local_settings import *
 except ImportError as e:
-	pass
+    pass
 ```
 
 而local_settings.py文件内可配置本地开发环境，在产品环境下配置不同项即可，保证便利和安全性。
 
+
+## 自动化部署
+可用框架：`Ansible、Fabric、SaltStack`
+**基础设施即代码**,它是一种通过代码来定义计算和网络基础设施的方法，它可以应用于任何软件系统中。因对部署代码考虑：
+- 使用描述文件
+- 自文档化的系统和过程
+- 版本化所有的代码
+- 持续地测试系统和过程
+- 小步前进
+- 保证服务持续可用
+
+现有配置改进：
+- 将配置文件存放在项目代码里
+- 使用Fabric来编写制动化脚本
+- 更新配置都有相应的任务
+- 每次修改配置应该做一次提交
+- 考虑在测试环境时，使用UI自动化测试来测试部署脚本
+- 对于大型的系统，采用蓝绿部署
+
+**Fabric自动化部署**：
+部署主要步骤：
+- 安装应用运行的基础软件
+- 下载指定版本的Web应用包
+- 完成Web应用的初始化操作
+- 复制Nginx、Circus配置文件
+- 启动Nginx和Circus
+
+※在远程服务器下执行命令，需要使用run函数`from fabric.api import run`，并可以导入env函数`from fabric.api import env`传入对应信息`env.hosts,env.user,env.password`(多个信息使用列表)达到自动登陆的效果。
+
+**运行环境搭建**：
+主要用到`fabric.api`下的sudo、run函数。
+- 安装相应的Ubantu软件，如git、python3-pip、nginx等
+- 安装virtualenv软件，并使用该软件来创建虚拟环境
+- 安装circus
+- 删除默认的Nginx配置
+
+**编写自动化部署脚本**：
+依据*自文档化的系统和过程*原则，用代码来标示文档，下面为手动部署过程的重构，完善对应代码即可。
+
+```
+app_path = "~"
+@task
+def deploy(version):
+    """depoly app to cloud"""
+    with cd(app_path):
+        get_app(version)
+        setup_app(version)
+        config_app()
+        
+    nginx_config()
+    nginx_enable_site('growth-studio.conf')
+    
+    circus_config()
+    circus_upstart_config()
+    
+    circus_start()
+    nginx_restart()
+```
+
+>with设置当前工作环境的上下文，如上面的cd(app_path)表示下面执行的每个脚本都在这个路径下执行。
+>prefix设置命令执行的前缀，则每次都在执行run函数之前，先执行一次激活虚拟环境的操作。
 
 
 
