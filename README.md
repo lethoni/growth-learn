@@ -275,7 +275,7 @@ except ImportError as e:
 - 对于大型的系统，采用蓝绿部署
 
 **Fabric自动化部署**：
-部署主要步骤：
+完成应用与环境的隔离，部署主要步骤：
 - 安装应用运行的基础软件
 - 下载指定版本的Web应用包
 - 完成Web应用的初始化操作
@@ -316,6 +316,67 @@ def deploy(version):
 
 >with设置当前工作环境的上下文，如上面的cd(app_path)表示下面执行的每个脚本都在这个路径下执行。
 >prefix设置命令执行的前缀，则每次都在执行run函数之前，先执行一次激活虚拟环境的操作。
+
+其他方式：
+1. [Ansible](http://www.ansible.com.cn/),使用方式为编写一个名为playbook的领域特定语言配置。编完脚本后，配置hosts以及Ansible配置文件ansible.cfg，执行如下命令即可安装`ansible-playbook playbook.yml --ask-become-pass`
+2. Docker,一个基于操作系统的虚拟机，但性能和在正常服务器上运行相差无几。
+
+
+**隔离与运行环境**：
+确保运行环境独立使用的方法：
+1. 隔离硬件：虚拟机
+2. 隔离操作系统：容器虚拟化
+3. 隔离底层：应用容器
+4. 隔离依赖版本：虚拟环境
+5. 隔离运行环境：语言虚拟机
+6. 隔离语言：DSL
+
+
+## 数据分析和性能优化
+
+**数据分析**：
+完成整个数据分析过程，需要的步骤：
+- 识别需求
+- 收集数据
+- 存储数据
+- 分析数据
+- 展示数据
+
+实用工具介绍：
+- 使用Google Analytics/Piwik(基于PHP和MySQL)对网站流量进行统计
+- 使用自定义的事件来追踪一些关键用户行为
+- 分析网站的流量来源、受众概览、转化率
+
+※开源日志管理方案Elasticsearch+Logstash+Kibana,Spark,Flume
+
+**性能分析及优化**：
+- PageSpeed、YSlow可以帮助改善网页速度
+- New Relic可以帮助分析应用中的瓶颈，进行有针对性优化
+- 了解前端常用的一些优化技巧
+- 使用APM来对应用的瓶颈进行分析、优化
+- 应用缓存来优化应用的性能
+
+1. 使用PageSpeed Insights进行分析
+Google的PageSpeed Insights分析工具有[网页版](https://developers.google.com/speed/pagespeed/insights/?hl=zh-CN)和插件版，推荐使用插件版不会受限于网络的影响。
+
+使用分数来衡量网页性能(不关注网络连接问题)：
+- 首屏加载时间：从用户请求新页面到浏览器呈现首屏内容所用的时间。
+- 完整的网页加载时间：从用户请求新网页到浏览器完全呈现网页所用的时间。
+
+2. 常见网站性能优化策略
+优化措施：
+- 减少HTTP请求。合并JaveScript和CSS(需评估)，CSS Sprites(一个页面设计的所有零星图片都包含到一张大图中，)，拆分初始化负载(将JavaScript文件分成两部分：渲染页面必需和其他。异步加载)，划分主域(将资源划分的请求划分到几个不同的域上)。
+- 页面内部优化:*尽快渲染出页面*。将CSS放在顶部，将JavaScript放在底部(单页面应用，JS放顶部)，压缩HTML。
+- 启用缓存。后台优化，页面缓存。
+- 减少下载量:*减少对服务器请求*。使用CDN，使用外部JavaScript和CSS，使用gzip压缩，缓存(添加Expires头、配置ETag)。
+- 网络连接优化:*域名到服务器优化*。DNS域名解析加速，减少DNS查找，使用HTTP2来加载HTTPS请求。
+
+>为了较少时间花费，可以使用一些成熟的方案，如PageSpeed的HTTP服务器模块。
+
+3. 使用自动优化工具
+Google提供的PageSpeed服务器模块可直接用于自动优化，支持Nginx、Apache、IIS服务器，只需在编译时加入这个模块。
+安装PageSpeed: `sudo apt-get install build-essential zlib1g-dev libpcre3 libpcre3-dev unzip libssl-dev`
+Nginx服务器模块[ngx_pagespeed](https://www.modpagespeed.com/doc/build_ngx_pagespeed_from_source)安装：`bash <(curl -f -L -sS https://ngxpagespeed.com/install) --nginx-version latest`(如curl: (60) server certificate verification failed. 可增加 -k 忽略验证。)之后增加自定义配置`--sbin-path=/usr/sbin/nginx --conf_path=/etc/nginx/nginx.conf --with-http_ssl_module` 随后配置Nginx[配置文件](https://www.modpagespeed.com/doc/configuration)。重启服务器即可。
 
 
 
