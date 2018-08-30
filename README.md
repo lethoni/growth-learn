@@ -374,9 +374,65 @@ Google的PageSpeed Insights分析工具有[网页版](https://developers.google.
 >为了较少时间花费，可以使用一些成熟的方案，如PageSpeed的HTTP服务器模块。
 
 3. 使用自动优化工具
+
 Google提供的PageSpeed服务器模块可直接用于自动优化，支持Nginx、Apache、IIS服务器，只需在编译时加入这个模块。
 安装PageSpeed: `sudo apt-get install build-essential zlib1g-dev libpcre3 libpcre3-dev unzip libssl-dev`
 Nginx服务器模块[ngx_pagespeed](https://www.modpagespeed.com/doc/build_ngx_pagespeed_from_source)安装：`bash <(curl -f -L -sS https://ngxpagespeed.com/install) --nginx-version latest`(如curl: (60) server certificate verification failed. 可增加 -k 忽略验证。)之后增加自定义配置`--sbin-path=/usr/sbin/nginx --conf_path=/etc/nginx/nginx.conf --with-http_ssl_module` 随后配置Nginx[配置文件](https://www.modpagespeed.com/doc/configuration)。重启服务器即可。
+
+3.1 后台优化：应用性能管理工具(APM)
+了解性能瓶颈最好方法：查看程序中运行*时间最长*的部分。
+性能管理工具分析应用的五个维度：
+- 终端用户体验监控
+- 应用运行时架构
+- 用户自定义的事物分析
+- 应用组件监控
+- 报告及应用数据分析
+
+应用性能指数(Apdex)，定义了应用程序响应的最优时间T，同时定义了三种不同的性能表现。
+- 满意：应用响应时间低于或等于目标时间(T秒)
+- 可容忍：响应滞后，响应时间大于目标时间(T秒)
+- 挫折：响应时间大于*四倍的目标时间(T秒)*
+
+使用[New Relic](https://newrelic.com/)进行优化
+登陆生成：`license key`
+安装：`pip install newrelic`
+使用Key生产配置文件：`newrelic-admin generate-config <your-key-goes-here> newrelic.ini`
+设置环境变量，启动：`export NEW_RELIC_CONFIG_FILE=newrelic.ini`,`newrelic-admin run-program YOUR_COMMAND_OPTIONS`
+设置好后等待几分钟可进入后台查看性能情况。
+
+3.2 缓存
+采用一些策略加速用户打开网页的速度。
+**浏览器缓存**：静态资源缓存。可通过设置HTTP头的Cache-Control、Expires、Last-Modified/ETag等字段。
+
+**应用缓存**：缓存数据库查询结果，磁盘文件数据、某个耗时的计算操作。
+- [Memcached](https://docs.djangoproject.com/en/1.7/topics/cache/)，基于内存的缓存服务，位于应用层与数据库之间，可减少数据库读取负担，提供更快的读取速度。以上只需装好Memcached和python-memcached，然后在settings.py添加相关配置。
+- 数据库缓存
+- 文件缓存
+- 本地内存缓存
+- View缓存(不易控制)
+```
+# 页面缓存15s
+@cache_page(60*15)
+def blog_list(request):
+    return render_to_response('blog/list.html'，{'blogs': Blog.objects.all()})
+```
+- 模板系统缓存
+```
+# 缓存时间600s，缓存名字blogcache
+{％ load cache ％}
+
+{％ cache 600 blogcache ％}
+{％ for blog in blogs ％}
+＜div class="col-sm-4"＞
+＜h2＞＜a href="{{ blog.get_absolute_url }}"＞{{ blog.title }}＜/a＞＜/h2＞          {{blog.body | slice:":80"}}
+   {{blog.posted}} - By {{blog.author}}
+＜/div＞
+{％ endfor ％}
+{％ endcache ％}
+```
+- 缓存API(只需对特别数据结果缓存时，可采用)
+
+**缓存服务器**：运行在浏览器与原始服务器之间，可降低服务器负载。常见缓存服务器有：Varnish、Squid，HTTP服务器也可使用第三方模块扩展。
 
 
 
