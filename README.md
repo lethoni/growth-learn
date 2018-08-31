@@ -1,3 +1,5 @@
+[精益实践源码](https://github.com/phodal/growth-code)
+
 ## 使用Fabric搭建构建系统
 **安装** `pip install fabric3`
 **运行** `$ fab [para]`
@@ -376,6 +378,7 @@ Google的PageSpeed Insights分析工具有[网页版](https://developers.google.
 3. 使用自动优化工具
 
 Google提供的PageSpeed服务器模块可直接用于自动优化，支持Nginx、Apache、IIS服务器，只需在编译时加入这个模块。
+
 安装PageSpeed: `sudo apt-get install build-essential zlib1g-dev libpcre3 libpcre3-dev unzip libssl-dev`
 Nginx服务器模块[ngx_pagespeed](https://www.modpagespeed.com/doc/build_ngx_pagespeed_from_source)安装：`bash <(curl -f -L -sS https://ngxpagespeed.com/install) --nginx-version latest`(如curl: (60) server certificate verification failed. 可增加 -k 忽略验证。)之后增加自定义配置`--sbin-path=/usr/sbin/nginx --conf_path=/etc/nginx/nginx.conf --with-http_ssl_module` 随后配置Nginx[配置文件](https://www.modpagespeed.com/doc/configuration)。重启服务器即可。
 
@@ -394,14 +397,21 @@ Nginx服务器模块[ngx_pagespeed](https://www.modpagespeed.com/doc/build_ngx_p
 - 挫折：响应时间大于*四倍的目标时间(T秒)*
 
 使用[New Relic](https://newrelic.com/)进行优化
+
 登陆生成：`license key`
+
 安装：`pip install newrelic`
+
 使用Key生产配置文件：`newrelic-admin generate-config <your-key-goes-here> newrelic.ini`
+
 设置环境变量，启动：`export NEW_RELIC_CONFIG_FILE=newrelic.ini`,`newrelic-admin run-program YOUR_COMMAND_OPTIONS`
+
 设置好后等待几分钟可进入后台查看性能情况。
 
 3.2 缓存
+
 采用一些策略加速用户打开网页的速度。
+
 **浏览器缓存**：静态资源缓存。可通过设置HTTP头的Cache-Control、Expires、Last-Modified/ETag等字段。
 
 **应用缓存**：缓存数据库查询结果，磁盘文件数据、某个耗时的计算操作。
@@ -424,8 +434,9 @@ def blog_list(request):
 {％ cache 600 blogcache ％}
 {％ for blog in blogs ％}
 ＜div class="col-sm-4"＞
-＜h2＞＜a href="{{ blog.get_absolute_url }}"＞{{ blog.title }}＜/a＞＜/h2＞          {{blog.body | slice:":80"}}
-   {{blog.posted}} - By {{blog.author}}
+＜h2＞＜a href="{{ blog.get_absolute_url }}"＞{{ blog.title }}＜/a＞＜/h2＞
+    {{blog.body | slice:":80"}}
+    {{blog.posted}} - By {{blog.author}}
 ＜/div＞
 {％ endfor ％}
 {％ endcache ％}
@@ -433,6 +444,109 @@ def blog_list(request):
 - 缓存API(只需对特别数据结果缓存时，可采用)
 
 **缓存服务器**：运行在浏览器与原始服务器之间，可降低服务器负载。常见缓存服务器有：Varnish、Squid，HTTP服务器也可使用第三方模块扩展。
+
+
+# 持续集成与持续交付
+
+开发流程一般有开发环境、产品环境、测试环境(testing)、模拟环境(staging)。持续交付就是不断地生产出来，经过工人测试，测试合格后打包、发布。
+
+**持续集成工具Jenkins**：
+
+持续集成是当我们提交代码后，就自动按照设计的构建流程：执行CheckStyle、执行单元测试、执行功能测试等，通过它帮助找到代码中的问题。有以下关键因素：
+- 版本管理工具
+- 持续集成服务器
+- 测试环境
+
+为了保证持续集成的功能，需做到以下一系列实践：
+- 维护同一个代码源
+- 自动化构建
+- 支持自动化测试
+- 频繁提交代码，一天应该要提交一次，到多次。
+- 每次提交都应该执行构建
+- 让构建尽可能快
+- 拥有接近产品环境的测试环境
+- 团队成员可以轻松访问
+- 团队成员都可以看到构建结果
+- 支持自动化部署
+
+**工具选择与Pipeline设计**：
+持续集成服务器是一个运行着持续集成工具的服务器，由两部分组成：
+- 主服务器(Master)：用于管理持续集成服务器、节点服务器、工具插件、设计流水线等。
+- 从服务器(Slave)：用于运行流水线、返回运行结果等，接收Master分配和管理。
+
+**持续集成工具**：
+
+Jenkins开源，Bamboo收费，GO-CD(更适合复杂一些流程)，持续集成工具包含下列功能；
+- 源代码控制系统
+- 依赖管理工具
+- 支持各种类型的测试
+- 可以使用插件来扩展系统
+- 支持流水线(Pipeline)
+- 可视化结果
+
+Jenkins Pipeline设计步骤：
+- 签出代码
+- 创建虚拟环境
+- 搭建运行环境
+- 执行单元测试
+- 执行功能测试
+- 部署应用(一般情况为部署到开发、测试环境)
+
+一个好的Pipeline应具备以下特点：
+- 适应能力强：可对住服务器重启。
+- 可暂停：可等待开发人员输入或批准。
+- 高效：可从已保存的检查点重新运行。
+- 可视化：可提供仪表盘，并包含构建趋势。
+
+在持续集成服务器上执行过程还需制定好一些规则，提交代码前，先在本地运行测试，测试未通过，或发现新Bug时，及时修复，如修复需时过长可考虑回滚代码。
+
+**Jenkins搭建持续集成**：
+1. 本地机器运行
+- [官网](https://jenkins.io/)下载最新jenkins.war文件
+- Java环境安装,Linux安装: `sudo apt-get install openjdk-8-jre`
+- 运行：`java -jar jenkins.war`
+
+2. 服务器安装
+- 安装[方法](https://pkg.jenkins.io/debian/)，要确认Java版本
+- 启动：`service jenkins start`
+- 关闭：`service jenkins stop`
+- 可选插件：Pipeline、BlueOcean(更好用户体验)
+
+第一次'构建一个自由风格的软件项目'：
+步骤如下：
+- 配置源码管理，选择Git
+- 创建构建触发条件，暂用Poll SCM，最好的选择是使用Build when a change is pushed to GitHub，当发生代码提交时，就会运行测试。因此，需要将服务器部署到外网，并与GitHub集成好。
+- 按步骤创建shell脚本，选execute shell，如下。
+- 添加构建完成的步骤
+- 测试任务
+
+*Poll SCM*：
+使用五空格分隔值表示：分钟、小时、日期、月份、星期，对应如下：①分钟（0~59）②小时（0~23）③日期（1~31）④月份（1~12）⑤星期（0~6），可使用的特殊符号，"*"代表所有的取值范围内数字；"/"代表每的意思；"*/5"表示每5个单位；"-"代表从某个数字到某个数字；","分开几个离散的数字。例如：H/5 9-18 * * 1-5(工作日早9到晚6点每5分钟定时任务)
+
+```
+# 创建虚拟环境，激活并安装fabric3
+# 可先填充下列Shell脚本，进行第一次测试使用
+# 之后另建Ci文件夹，并push到github 之后可改为 sh 'ci/setup.sh'
+PATH=$WORKSPACE/py35env/bin:/usr/bin:$PATH
+if [ ! -d "py35env" ]; then
+      virtualenv --distribute -p /usr/local/bin/python3.5 py35env
+fi
+. py35env/bin/activate
+pip3 install fabric3
+```
+
+可用fab 命令转化为不同的sh脚本，用于执行功能测试和单元测试。构建如：
+
+```
+# e2e.sh
+. py35env/bin/activate
+fab e2e
+```
+
+而当我们决定使用一个工具时，也可以选择一种更好的方式，如*Jenkinsfile*。
+
+
+
 
 
 

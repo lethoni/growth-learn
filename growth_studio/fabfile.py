@@ -57,13 +57,19 @@ def tag_version(version):
 @task
 def test():
     """Run Test"""
-    local("python manage.py test")
+    local("python manage.py test blog")
 
 
 @task
 def pep8():
     """Check the project for PEP8 compliance using pep8"""
     local('pep8 .')
+
+
+@task
+def e2e():
+    """Run E2E Test"""
+    local("./manage.py test e2e")
 
     
 @task
