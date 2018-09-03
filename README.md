@@ -184,22 +184,18 @@ PermitRootLogin yes  #默认prohibit-passwd
  - 添加配置文件 `circus.ini`
  - 启动 `circusd circus.ini` (后台参数 --daemon)
   
->circus.ini :
->
->[watcher:growth_studio]
->
->cmd = gunicorn --workers=2 --bind unix:/tmp/growth-studio.sock 
->
->growth_studio.wsgi:application
->
->working_dir = /home/myproject/growth-studio
->
->copy_env = True
->
->virtualenv = /home/myproject/venv
->
->send_hup = True
-  
+```
+# circus.ini :
+
+[watcher:growth_studio]
+cmd = gunicorn --workers=2 --bind unix:/tmp/growth-studio.sock 
+growth_studio.wsgi:application
+working_dir = /home/myproject/growth-studio
+copy_env = True
+virtualenv = /home/myproject/venv
+send_hup = True
+```
+ 
 ![supervisord配置方法](http://pbn1d3gdg.bkt.clouddn.com/supervisord%E9%85%8D%E7%BD%AE.png)
 ![Circus配置方法](http://pbn1d3gdg.bkt.clouddn.com/Circus%E9%83%A8%E7%BD%B2.png)
 
@@ -207,14 +203,14 @@ PermitRootLogin yes  #默认prohibit-passwd
 **开机启动web应用**：
 使用`Upstart`替代传统init系统初始化程序。
 
->/etc/init/circus.conf
->
->description "circusd"
->
->start on filesystem and net-device-up IFACE=lo
->stop on runlevel [016]
->
->exec /usr/local/bin/circusd /etc/circus/circusd.ini
+```
+# etc/init/circus.conf
+
+description "circusd"
+start on filesystem and net-device-up IFACE=lo
+stop on runlevel [016]
+exec /usr/local/bin/circusd /etc/circus/circusd.ini
+```
 
 `stat on`表示服务运行的时机：在文件系统和本地回环IP网络已经准备就绪后再执行。`stop on`说明服务将会在运行级别0、1、6（关机、无网络、重启）时停止。最后的`exec`才是我们的运行脚本。
 
@@ -521,12 +517,12 @@ Jenkins Pipeline设计步骤：
 - 测试任务
 
 *Poll SCM*：
-使用五空格分隔值表示：分钟、小时、日期、月份、星期，对应如下：①分钟（0~59）②小时（0~23）③日期（1~31）④月份（1~12）⑤星期（0~6），可使用的特殊符号，"*"代表所有的取值范围内数字；"/"代表每的意思；"*/5"表示每5个单位；"-"代表从某个数字到某个数字；","分开几个离散的数字。例如：H/5 9-18 * * 1-5(工作日早9到晚6点每5分钟定时任务)
+使用五空格分隔值表示：分钟、小时、日期、月份、星期，对应如下：①分钟（0-59）②小时（0-23）③日期（1-31）④月份（1-12）⑤星期（0-6），可使用的特殊符号，"*"代表所有的取值范围内数字；"/"代表每的意思；"*/5"表示每5个单位；"-"代表从某个数字到某个数字；","分开几个离散的数字。例如：H/5 9-18 * * 1-5(工作日早9到晚6点每5分钟定时任务)
 
 ```
 # 创建虚拟环境，激活并安装fabric3
 # 可先填充下列Shell脚本，进行第一次测试使用
-# 之后另建Ci文件夹，并push到github 之后可改为 sh 'ci/setup.sh'
+# 之后另建Ci文件夹，并push到github 之后可改为 sh './growth_studio/ci/setup.sh'
 PATH=$WORKSPACE/py35env/bin:/usr/bin:$PATH
 if [ ! -d "py35env" ]; then
       virtualenv --distribute -p /usr/local/bin/python3.5 py35env
@@ -543,7 +539,20 @@ pip3 install fabric3
 fab e2e
 ```
 
-而当我们决定使用一个工具时，也可以选择一种更好的方式，如*Jenkinsfile*。
+当我们使用独立的脚本时，就可以独立于持续集成工具，很容易切换到其他工具里。
+
+
+**使用Jenkinsfile简化流程**：
+
+[Jenkinsfile](https://jenkins.io/doc/book/pipeline/jenkinsfile/)是基于Groovy的DSL来定义作业的，是一个包含Pipeline脚本的容器，它详细说明了执行Jenkins作业所需要的特定步骤。
+
+脚本式Pipeline使用`node`和`stage`定义构建流程。`node`用于为Jenkins住服务器指明持续集成的节点；`stage`是任务在执行时在逻辑上不同的步骤。执行步骤可每一步由一个简单的脚本构成，这样的好处在于，即使切换了不同的集成工具，也可以顺利地执行代码。
+
+
+
+
+
+
 
 
 
