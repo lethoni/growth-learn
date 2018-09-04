@@ -1,2 +1,2 @@
 . py35env/bin/activate
-fab install
+fab -f "./growth_studio/fabfile.py" install

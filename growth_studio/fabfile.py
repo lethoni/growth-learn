@@ -9,7 +9,7 @@ from fabric.context_managers import settings, hide, cd, prefix
 
 circus_file_path = os.path.realpath('deploy/circus.ini')
 circus_upstart_file_path = os.path.realpath('deploy/circus.conf')
-nginx_config_path = os.path.realpath('deploy/nginx')
+nginx_config_path = os.path.realpath('deploy/Nginx')
 nginx_avaliable_path = "/etc/nginx/sites-available/"
 nginx_enable_path = "/etc/nginx/sites-enabled/"
 app_path = "~"
@@ -128,7 +128,7 @@ def setup_app(version):
 
 def config_app():
     with cd('growth-studio'):
-        with prefix('source ' + virtual_env_path)
+        with prefix('source ' + virtual_env_path):
             run('python manage.py collectstatic -l --noinput')
             run('python manage.py migrate')
 

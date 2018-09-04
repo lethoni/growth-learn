@@ -21,6 +21,8 @@ def hello():
 	Done.
 ```
 
+> fabfile中一些语句使用[方法](http://www.bjhee.com/fabric.html)
+
 
 ## PEP8 代码风格检测
  **安装** `pip install pep8==1.7.0` 
@@ -112,12 +114,14 @@ Selenium是一个Web应用程序测试框架，它可以让浏览器自动化地
 - 前端开发人员，关注提供一个好的交互界面
 - 业务分析员，关注如何分析数据，便于作出更好的业务决策
 
-**管理数据**
+**管理数据**：
+
 对于数据的操作，有增加、读取、更新和删除四项基本操作，即CRUD。创建数据时，主要考虑**数据验证**和**鉴权**。
 1. 鉴权，判定是否有创建权限
 2. 验证，数据是否符合要求(为更好用户体验，可用JavaScript校验)
 
-**显示数据**
+**显示数据**：
+
 三步走：获取数据，过滤数据，美化界面。
 对后台模板形式返回HTML应用，是在*服务器*完成渲染和过滤，浏览器显示；
 对单页面应用，则由前台向后台请求(通常Ajax, Fetch)，服务器返回数据，前台进行过滤，浏览器显示。
@@ -144,6 +148,7 @@ Selenium是一个Web应用程序测试框架，它可以让浏览器自动化地
 - 启动和停止系统服务
 
 **Linux下SSH服务器端工具**：
+
 安装：`sudo apt-get install openssh-server`
 启动：`/etc/init.d/ssh start`
 
@@ -164,6 +169,7 @@ PermitRootLogin yes  #默认prohibit-passwd
 - 使用包管理工具直接安装
 
 **线上部署工具**：
+
 用[Gunicorn](http://docs.gunicorn.org/en/stable/settings.html)提供应用的多线程服务，用Nginx承担静态文件等请求(Nginx还可承担安全任务，如反爬虫，限制IP访问等)，使用Nginx反向台历HTTP请求给Gunicorn，由Gunicorn再将请求交给web应用程序。
 运行 `nohup gunicorn -w 2 -b unix:/tmp/growth_studio.sock growth_studio.wsgi:application&`(nohup..&后台运行)Gunicorn与Django为WSGI通信，与Nginx使用socket套接字通信。
 
@@ -201,6 +207,7 @@ send_hup = True
 
 
 **开机启动web应用**：
+
 使用`Upstart`替代传统init系统初始化程序。
 
 ```
@@ -215,6 +222,7 @@ exec /usr/local/bin/circusd /etc/circus/circusd.ini
 `stat on`表示服务运行的时机：在文件系统和本地回环IP网络已经准备就绪后再执行。`stop on`说明服务将会在运行级别0、1、6（关机、无网络、重启）时停止。最后的`exec`才是我们的运行脚本。
 
 **部署检查清单**：
+
 部署工具检查使用[Deployment checklist](https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/) :
 检测 `python manage.py check --deploy`
 - 必须设置正确的安全级别
@@ -242,6 +250,7 @@ exec /usr/local/bin/circusd /etc/circus/circusd.ini
 ※ALOWED_HOSTS只有列表中的host才能访问，用于限定请求的host值，以防黑客构造包来发送请求。如ALLOWED_HOSTS = ['127.0.0.1']，如不限制为['*']
 
 **配置管理**：
+
 部署服务器有许多的配置文件内容是相互依赖的，如Gunicorn与Nginx、Nginx与Web应用的Static等。因此，我们需要使用版本控制来管理这些配置文件。可考虑用Git，但须考虑密钥、Token等内容的安全。
 不同的环境里使用不同点的配置文件方法，可在代码库内为开发环境创建一个配置文件，在额外的安全环境里创建额外的配置文件，之后，在settings.py内引入。如下：
 ```
@@ -273,6 +282,7 @@ except ImportError as e:
 - 对于大型的系统，采用蓝绿部署
 
 **Fabric自动化部署**：
+
 完成应用与环境的隔离，部署主要步骤：
 - 安装应用运行的基础软件
 - 下载指定版本的Web应用包
@@ -283,6 +293,7 @@ except ImportError as e:
 ※在远程服务器下执行命令，需要使用run函数`from fabric.api import run`，并可以导入env函数`from fabric.api import env`传入对应信息`env.hosts,env.user,env.password`(多个信息使用列表)达到自动登陆的效果。
 
 **运行环境搭建**：
+
 主要用到`fabric.api`下的sudo、run函数。
 - 安装相应的Ubantu软件，如git、python3-pip、nginx等
 - 安装virtualenv软件，并使用该软件来创建虚拟环境
@@ -290,6 +301,7 @@ except ImportError as e:
 - 删除默认的Nginx配置
 
 **编写自动化部署脚本**：
+
 依据*自文档化的系统和过程*原则，用代码来标示文档，下面为手动部署过程的重构，完善对应代码即可。
 
 ```
@@ -321,6 +333,7 @@ def deploy(version):
 
 
 **隔离与运行环境**：
+
 确保运行环境独立使用的方法：
 1. 隔离硬件：虚拟机
 2. 隔离操作系统：容器虚拟化
@@ -466,6 +479,7 @@ def blog_list(request):
 - 支持自动化部署
 
 **工具选择与Pipeline设计**：
+
 持续集成服务器是一个运行着持续集成工具的服务器，由两部分组成：
 - 主服务器(Master)：用于管理持续集成服务器、节点服务器、工具插件、设计流水线等。
 - 从服务器(Slave)：用于运行流水线、返回运行结果等，接收Master分配和管理。
@@ -548,8 +562,11 @@ fab e2e
 
 脚本式Pipeline使用`node`和`stage`定义构建流程。`node`用于为Jenkins住服务器指明持续集成的节点；`stage`是任务在执行时在逻辑上不同的步骤。执行步骤可每一步由一个简单的脚本构成，这样的好处在于，即使切换了不同的集成工具，也可以顺利地执行代码。
 
+> 如使用`sh "./ci/test.sh"`构建途中遇到`.sh: Premission denied.`可使用`sh "bash ./ci/test.sh"`方式解决。
 
+> fab 使用的fabfile.py 未放置于当前路径时，需要使用-f指定路径，`fab -f "path" test`
 
+> Django IOError: No translation files found for default language zh-cn.检查/usr/local/lib/python3.5/dist-packages/django/conf/locale/下支持语言文件。
 
 
 

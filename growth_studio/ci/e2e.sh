@@ -1,2 +1,2 @@
 . py35env/bin/activate
-fab e2e
+fab -f "./growth_studio/fabfile.py" e2e

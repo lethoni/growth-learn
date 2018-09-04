@@ -1,2 +1,2 @@
 . py35env/bin/activate
-fab deploy:dev
+fab -f "./growth_studio/fabfile.py" deploy:0.0.4
