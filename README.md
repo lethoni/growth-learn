@@ -23,6 +23,8 @@ def hello():
 
 > fabfile中一些语句使用[方法](http://www.bjhee.com/fabric.html)
 
+> fab 使用的fabfile.py 未放置于当前路径时，需要使用-f指定路径，`fab -f "path" test`
+
 
 ## PEP8 代码风格检测
  **安装** `pip install pep8==1.7.0` 
@@ -178,12 +180,12 @@ PermitRootLogin yes  #默认prohibit-passwd
  - 配置 `/etc/nginx/site-available/default`
  - 测试 `sudo nginx -t`
  - 启动 `/usr/sbin/nginx -c /etc/nginx/nginx.conf` 
- - 重启 `/usr/sbin/nginx -s reload`
- - 停止 `/usr/sbin/nginx -s stop`
+ - 重启 `service nginx restart`
+ - 停止 `service nginx stop`
 2. Gunicorn, WSGI服务器(其他：Chaussette)
  - 安装 `pip install gunicorn`
  - 启动(项目根目录) `gunicorn -w 3 -b 127.0.0.1:8080 project.wsgi:application`(-w INT 开多个进程， -b ADDRESS)
- - 静态文件收集管理 `python manage.py collectstatic`
+ - 静态文件收集管理 `python manage.py collectstatic --noinput`(-l 软连接 --noinput 无需确认)
 3. ~~Supervisor, 进程守护工具(Python 2.x编写)~~
 4. Circus, 进程管理工具(Python3)
  - 安装(需退出虚拟环境) `pip install circus`
@@ -201,9 +203,15 @@ copy_env = True
 virtualenv = /home/myproject/venv
 send_hup = True
 ```
- 
+
+nginx配合Circus和gunicor[配置方法](https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html#configure-nginx-for-your-site)
+
+> python使用django的collectstatic 方式收集静态文件需要注意的是settings下的STATIC_ROOT如使用当前路径的情况，如果在/root/目录下，nginx设置的/static/在网页端会显示403 forbidden，需要修改为非/root/目录才可正常显示，原因暂时不清楚-.-!!
+
+
 ![supervisord配置方法](http://pbn1d3gdg.bkt.clouddn.com/supervisord%E9%85%8D%E7%BD%AE.png)
 ![Circus配置方法](http://pbn1d3gdg.bkt.clouddn.com/Circus%E9%83%A8%E7%BD%B2.png)
+
 
 
 **开机启动web应用**：
@@ -221,6 +229,8 @@ exec /usr/local/bin/circusd /etc/circus/circusd.ini
 
 `stat on`表示服务运行的时机：在文件系统和本地回环IP网络已经准备就绪后再执行。`stop on`说明服务将会在运行级别0、1、6（关机、无网络、重启）时停止。最后的`exec`才是我们的运行脚本。
 
+
+
 **部署检查清单**：
 
 部署工具检查使用[Deployment checklist](https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/) :
@@ -232,16 +242,27 @@ exec /usr/local/bin/circusd /etc/circus/circusd.ini
 - 提交错误报告
 
 *关于HTTPS使用设置*(不适用不开启)：
+
 1.COOKIE设置：
+
   ESSION_COOKIE_SECURE = True;
+
   CSRF_COOKIE_SECURE = True;
+
   CSRF_COOKIE_HTTPONLY= True;
+
 2.安全设置：
+
   SECURE_HSTS_SECONDS = True;
+
   SECURE_SSL_REDIRECT = True;
+
   SECURE_CONTENT_TYPE_NOSNIFF = True;
+
   SECURE_BROWSER_XSS_FILTER = True;
+
   SECURE_HSTS_INCLUDE_SUBDOMAINS = True;
+
 
 *deploy需注意危险内容*：
 - 关闭调试模式。DEBUG=False
@@ -564,9 +585,8 @@ fab e2e
 
 > 如使用`sh "./ci/test.sh"`构建途中遇到`.sh: Premission denied.`可使用`sh "bash ./ci/test.sh"`方式解决。
 
-> fab 使用的fabfile.py 未放置于当前路径时，需要使用-f指定路径，`fab -f "path" test`
-
 > Django IOError: No translation files found for default language zh-cn.检查/usr/local/lib/python3.5/dist-packages/django/conf/locale/下支持语言文件。
+
 
 
 

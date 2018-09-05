@@ -69,7 +69,7 @@ def pep8():
 @task
 def e2e():
     """Run E2E Test"""
-    local("./manage.py test e2e")
+    local("python manage.py test e2e")
 
     
 @task
@@ -92,17 +92,16 @@ def setup():
     ]
     sudo("apt-get install -y " + " ".join(APT_GET_PACKAGES))
     sudo('pip3 install circus')
-    sudo('rm' + nginx_enable_path + 'default')
     run('virtualenv --distribute -p /usr/bin/python3.5 venv')
 
 
 @task
 def deploy(version):
     """depoly app to cloud"""
-    with cd(app_path):
-        get_app(version)
-        setup_app(version)
-        config_app()
+    #with cd(app_path):
+        #get_app(version)
+     #   setup_app(version)
+     #   config_app()
         
     nginx_config()
     nginx_enable_site('growth-studio.conf')
@@ -116,20 +115,21 @@ def deploy(version):
 
 def get_app(version):
     run(('wget ' + "https://codeload.github.com/lethoni/growth-learn/tar.gz/v%s") % version)
-    run('tar xvf v%s' % version)
+    run('tar -xvf v%s' % version)
     
 
 def setup_app(version):
-    with prefix('source ' + virtual_env_path):
-        run('pip3 install -r growth-studio-%s/requirements.txt' % version)
-        run('rm -f growth-studio')
-        run('ln -s growth-studio-%s growth-studio' % version)
+    with cd('~/growth-learn-%s' % version):
+        with prefix('source ' + virtual_env_path):
+            #run('pip3 install -r requirements.txt')
+            run('rm -f growth-studio')
+            run('ln -s growth-learn-%s/growth_studio ../growth-studio' % version)
 
 
 def config_app():
     with cd('growth-studio'):
         with prefix('source ' + virtual_env_path):
-            run('python manage.py collectstatic -l --noinput')
+            run('python manage.py collectstatic --noinput')
             run('python manage.py migrate')
 
 
@@ -168,5 +168,6 @@ def circus_start():
 def nginx_enable_site(nginx_config_file):
     "Enable nginx site"
     with cd(nginx_enable_path):
+        sudo('rm -f default')
         sudo('rm -f ' + nginx_config_file)
         sudo('ln -s ' + nginx_avaliable_path + nginx_config_file)
