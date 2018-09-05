@@ -122,7 +122,7 @@ def setup_app(version):
     with cd('~/growth-learn-%s' % version):
         with prefix('source ' + virtual_env_path):
             run('pip3 install -r requirements.txt')
-            run('rm -f growth-studio')
+            run('rm -f ../growth-studio')
             run('ln -s growth-learn-%s/growth_studio ../growth-studio' % version)
 
 
@@ -162,7 +162,7 @@ def circus_upstart_config():
 
 def circus_start():
     "Send Circus Upstart configuration"
-    sudo('/usr/local/bin/circusd /etc/circus/circus.ini --daemon')
+    sudo('(/usr/local/bin/circusd /etc/circus/circus.ini --daemon) && sleep 1')
 
 
 def nginx_enable_site(nginx_config_file):

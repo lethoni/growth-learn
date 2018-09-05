@@ -25,6 +25,8 @@ def hello():
 
 > fab 使用的fabfile.py 未放置于当前路径时，需要使用-f指定路径，`fab -f "path" test`
 
+> fabric在远程执行run（'nohup xxx &'） 后台运行进程时，虽然返回的$?是0，但是机器上并没有执行命令，这种情况主要是由于Fabric过早关闭了连接的Session导致的，在需要执行命令后加sleep，比如run（'nohup xxx & '） 改为 run（'（nohup xxx & ）&& sleep 1'）  这样就可以解决问题。
+
 
 ## PEP8 代码风格检测
  **安装** `pip install pep8==1.7.0` 
@@ -206,7 +208,7 @@ send_hup = True
 
 nginx配合Circus和gunicor[配置方法](https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html#configure-nginx-for-your-site)
 
-> python使用django的collectstatic 方式收集静态文件需要注意的是settings下的STATIC_ROOT如使用当前路径的情况，如果在/root/目录下，nginx设置的/static/在网页端会显示403 forbidden，需要修改为非/root/目录才可正常显示，原因暂时不清楚-.-!!
+> python使用django的collectstatic 方式收集静态文件需要注意的是settings下的STATIC_ROOT使用当前路径的情况，如果在/root/目录下，nginx设置的/static/在网页端会显示403 forbidden，权限问题，需要修改为非/root/目录才可正常显示，或在头部添加nginx配置文件添加use root;也可解决。
 
 
 ![supervisord配置方法](http://pbn1d3gdg.bkt.clouddn.com/supervisord%E9%85%8D%E7%BD%AE.png)
@@ -586,7 +588,6 @@ fab e2e
 > 如使用`sh "./ci/test.sh"`构建途中遇到`.sh: Premission denied.`可使用`sh "bash ./ci/test.sh"`方式解决。
 
 > Django IOError: No translation files found for default language zh-cn.检查/usr/local/lib/python3.5/dist-packages/django/conf/locale/下支持语言文件。
-
 
 
 
