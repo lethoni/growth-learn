@@ -98,10 +98,10 @@ def setup():
 @task
 def deploy(version):
     """depoly app to cloud"""
-    #with cd(app_path):
-        #get_app(version)
-     #   setup_app(version)
-     #   config_app()
+    with cd(app_path):
+        get_app(version)
+        setup_app(version)
+        config_app()
         
     nginx_config()
     nginx_enable_site('growth-studio.conf')
@@ -121,7 +121,7 @@ def get_app(version):
 def setup_app(version):
     with cd('~/growth-learn-%s' % version):
         with prefix('source ' + virtual_env_path):
-            #run('pip3 install -r requirements.txt')
+            run('pip3 install -r requirements.txt')
             run('rm -f growth-studio')
             run('ln -s growth-learn-%s/growth_studio ../growth-studio' % version)
 
