@@ -4,22 +4,18 @@ node{
     }
     
     stage('Create Virtualenv'){
-      sh 'bash ./growth_studio/ci/setup.sh'
-    }
-    
-    stage('Install'){
-      sh 'bash ./growth_studio/ci/install.sh'
+      bat 'bash ./growth_studio/ci/setup.sh'
     }
 
     stage('Unit Test'){
-      sh 'bash ./growth_studio/ci/unit_test.sh'
+      bat 'bash ./growth_studio/ci/unit_test.sh'
     }
     
     stage('E2E Test'){
-      sh 'bash ./growth_studio/ci/e2e.sh'
+      bat 'bash ./growth_studio/ci/e2e.sh'
     }
     
     stage('Deploy'){
-      sh 'bash ./growth_studio/ci/deploy.sh'
+      bat 'bash ./growth_studio/ci/deploy.sh'
     }
 }

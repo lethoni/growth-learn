@@ -25,7 +25,7 @@ env.password = '123456'
 @task
 def install():
     """Install requirements packages"""
-    local("pip install -r ../requirements.txt")
+    local("pip install -r requirements.txt")
 
 
 @task

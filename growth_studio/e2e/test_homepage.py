@@ -22,7 +22,7 @@ class HomePageTest(TestCase):
 
 class HomePageTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        self.selenium = webdriver.Chrome('C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe')
+        self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
         super(HomePageTestCase, self).setUp()
         
