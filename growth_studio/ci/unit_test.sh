@@ -1,2 +1,2 @@
 . py35env/bin/activate
-fab -f "./growoth_studio/fabfile.py" test
+fab -f "./growth_studio/fabfile.py" test

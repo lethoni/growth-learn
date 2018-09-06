@@ -18,7 +18,7 @@ class BlogpostListTest(TestCase):
 
 class HomepageTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        self.selenium = webdriver.Chrome('C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe')
+        self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
         self.user = User.objects.create_user(username='loic', email='hello@qq.com',
                                              password='phodal')

@@ -31,7 +31,7 @@ def install():
 @task
 def freeze():
     """Freeze requirements packages"""
-    local("pip freeze > ../requirements.txt")
+    local("pip freeze > requirements.txt")
 
 
 @task
