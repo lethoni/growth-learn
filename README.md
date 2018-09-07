@@ -722,10 +722,25 @@ JSON它的格式完全独立于语言，可用各种语言来解析，且现在�
 
 **移动应用**
 
-需关注以下两点：
+同时应用于多个平台，需关注以下两点：
 
 - 响应式设计，不同屏幕大小设计不同UI。
 - 平台/设备特定代码，可调用一些原生插件提升用户体验，这些代码只在某个平台才运行。
+
+**Ionic 2介绍**：
+
+1. 先安装Node.js
+2. 安装Ionic和Cordova：`npm install -g ionic cordova`
+3. 创建项目：`ionic start myApp --tabs`(不使用--tabs参数，会出现几种参数选择)
+4. 创建成功后可在应用的目录下运行Web服务
+
+```
+cd growthStudioApp
+ionic serve
+# 使用 ionic serve --lab，可看到三种操作系统的界面
+```
+
+
 
 
 
