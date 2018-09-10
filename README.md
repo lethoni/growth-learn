@@ -740,6 +740,15 @@ ionic serve
 # 使用 ionic serve --lab，可看到三种操作系统的界面
 ```
 
+**应用原型与页面组成**：
+
+App原型设计工具：`Adobe XD CC`
+
+slides配置项：`<ion-slides pager loop autoplay='1000' speed='7000'>`，经测试原来使用的[options]会报错，Can't bind to 'options' since it isn't a known property of 'ion-slides'.
+
+
+
+
 
 
 
