@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'zb4j5%m7y6q_9@h5#rf4%&_-eu$)m*wm+4sfb=fgt4mvhew$=1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'homepage',
-    'blog'
+    'blog',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -124,8 +125,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = "/home/collected_static/static"
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+    os.path.join(BASE_DIR, 'static/'),
+    )
 
 
 #SECURE_HSTS_INCLUDE_SUBDOMAINS = True

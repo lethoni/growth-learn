@@ -267,7 +267,7 @@ exec /usr/local/bin/circusd /etc/circus/circusd.ini
 
 
 *deploy需注意危险内容*：
-- 关闭调试模式。DEBUG=False
+- 关闭调试模式。DEBUG=False #关闭调试模式，在运行runserver将不再支持加载static
 - 设置加密密钥，SECRET_KEY。重新生成
 
 ※ALOWED_HOSTS只有列表中的host才能访问，用于限定请求的host值，以防黑客构造包来发送请求。如ALLOWED_HOSTS = ['127.0.0.1']，如不限制为['*']
@@ -742,17 +742,27 @@ ionic serve
 
 **应用原型与页面组成**：
 
+更多元素介绍：[Ionic官网](https://ionicframework.com/docs/)
+
 App原型设计工具：`Adobe XD CC`
 
 slides配置项：`<ion-slides pager loop autoplay='1000' speed='7000'>`，经测试原来使用的[options]会报错，Can't bind to 'options' since it isn't a known property of 'ion-slides'.
 
 
+**Django REST Framework**:
 
+使用文档：[官方文档](http://www.django-rest-framework.org/)
+安装：`pip install djangorestframework`
+settings配置：`INSTALLEN_APPS = ['rest_framework']`
 
+使用该框架的理由：
 
-
-
-
+- 可在浏览器中调试的API
+- 包括OAuth1a和OAuth2的认证策略
+- 支持ORM和非ORM数据资源的序列化
+- 全程自定义开发
+- 额外的文档和强大的社区支持
+- 已被多家知名公司采用
 
 
 
