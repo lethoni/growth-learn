@@ -746,13 +746,15 @@ ionic serve
 
 App原型设计工具：`Adobe XD CC`
 
-slides配置项：`<ion-slides pager loop autoplay='1000' speed='7000'>`，经测试原来使用的[options]会报错，Can't bind to 'options' since it isn't a known property of 'ion-slides'.
+slides配置项：`<ion-slides pager loop autoplay='1000' speed='7000'>`，经测试原来使用的[options]="para"会报错，Can't bind to 'options' since it isn't a known property of 'ion-slides'.
 
 
 **Django REST Framework**:
 
 使用文档：[官方文档](http://www.django-rest-framework.org/)
+
 安装：`pip install djangorestframework`
+
 settings配置：`INSTALLEN_APPS = ['rest_framework']`
 
 使用该框架的理由：
@@ -763,6 +765,20 @@ settings配置：`INSTALLEN_APPS = ['rest_framework']`
 - 全程自定义开发
 - 额外的文档和强大的社区支持
 - 已被多家知名公司采用
+
+API测试可使用[Postman](https://www.getpostman.com/)，提供了一个可视化界面。
+
+**创建详情页和列表页**：
+
+- 生成详情页与列表页
+- 编写相应的模板
+- 从API中获取相应的结果
+
+生成页面：`ionic g page blogList` (ionic命令会将blogList风格的驼峰性转换为blog-list连字号形式的风格)
+
+> Error: No component factory found for BlogListPage. 在app.module.ts 文件内import { BlogListPage } from '../pages/blog-list/blog-list' 之后在@NgModules下声明可解决。
+
+
 
 
 
