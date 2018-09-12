@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { BlogDetailPage } from '../blog-detail/blog-detail';
-
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 /**
- * Generated class for the BlogListPage page.
+ * Generated class for the BlogDetailPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -15,30 +13,24 @@ import 'rxjs/add/operator/map';
 
 @IonicPage()
 @Component({
-  selector: 'page-blog-list',
-  templateUrl: 'blog-list.html',
+  selector: 'page-blog-detail',
+  templateUrl: 'blog-detail.html',
 })
-export class BlogListPage {
-  public blogs;
-  
+export class BlogDetailPage {
+  public blog={};
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public http: Http) {
-	let url: string = 'http://localhost:8000/api/blog/';
+	let blogId = navParams.get("blogId");
+	let url = 'http://localhost:8000/api/blog/' + blogId + '/';
 	this.http.get(url)
 	  .map(res => res.json())
 	  .subscribe(data => {
-		this.blogs = data;
+		this.blog = data;
 	  });
-	  
   }
 
-  gotoBlogDetail(blogId) {
-	this.navCtrl.push(BlogDetailPage, {
-	  blogId: blogId
-	});
-  }
-  
   ionViewDidLoad() {
-    console.log('ionViewDidLoad BlogListPage');
+    console.log('ionViewDidLoad BlogDetailPage');
   }
 
 }

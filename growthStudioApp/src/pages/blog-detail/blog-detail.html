@@ -1,5 +1,5 @@
 <!--
-  Generated template for the BlogListPage page.
+  Generated template for the BlogDetailPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,21 +7,17 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>blogList</ion-title>
+    <ion-title>blogDetail</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-<ion-card *ngFor="let blog of blogs" (click)="gotoBlogDetail(blog.id)">
-<ion-card-content>
-<h2 class="card-title">
+<h2>
 {{blog.title}}
 </h2>
 <p>
 {{blog.body}}
 </p>
-</ion-card-content>
-</ion-card>
 </ion-content>

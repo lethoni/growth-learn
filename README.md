@@ -778,7 +778,7 @@ API测试可使用[Postman](https://www.getpostman.com/)，提供了一个可视
 
 > Error: No component factory found for BlogListPage. 在app.module.ts 文件内import { BlogListPage } from '../pages/blog-list/blog-list' 之后在@NgModules下声明可解决。
 
-> XMLHttpRequest cannot load http://localhost:8000/api/blog/. No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://localhost:8100' is therefore not allowed access.跨域问题。
+> 设置好api后无数据显示，按F12在开发者模式下可以看到错误：XMLHttpRequest cannot load http://localhost:8000/api/blog/. No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://localhost:8100' is therefore not allowed access.跨域问题。
 
 关键字'Access-Control-Allow-Origin'，API不允许跨域调用，常用两种做法：
 

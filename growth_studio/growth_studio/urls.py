@@ -31,5 +31,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^blog/$', blog_list),
     url(r'^blog/(?P<slug>[^\.]+).html', blog_detail, name="blog_view"),
-    url(r'^api/', include(apiRouter.urls))
+    url(r'^api/', include(apiRouter.urls)),
     ]
