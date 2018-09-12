@@ -778,6 +778,22 @@ API测试可使用[Postman](https://www.getpostman.com/)，提供了一个可视
 
 > Error: No component factory found for BlogListPage. 在app.module.ts 文件内import { BlogListPage } from '../pages/blog-list/blog-list' 之后在@NgModules下声明可解决。
 
+> XMLHttpRequest cannot load http://localhost:8000/api/blog/. No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://localhost:8100' is therefore not allowed access.跨域问题。
+
+关键字'Access-Control-Allow-Origin'，API不允许跨域调用，常用两种做法：
+
+- 在本地设置代理允许这种跨域请求
+- 在服务端允许跨域请求
+
+
+**服务端跨域支持**：
+
+安装：`pip install django-cors-headers`
+
+配置settings：INSTALLED_APPS = ['corsheaders']，MIDDLEWARE = ['corsheaders.middleware.CorsMiddleware','django.middleware.common.CommonMiddleware',]，CORS_ORIGIN_WHITELIST = ('localhost:8100','127.0.0.1:8100')
+
+*CORS_ORIGIN_WHITELIST* 白名单添加的本地地址，在产品环境中不需要，也不需要允许跨域请求。当应用作为移动应用运行时，请求不会遇到这个问题。
+
 
 
 

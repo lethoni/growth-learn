@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'homepage',
     'blog',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'growth_studio.urls'
@@ -128,6 +131,10 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static/'),
     )
 
+CORS_ORIGIN_WHITELIST = (
+    'localhost:8100',
+    '127.0.0.1:8100'
+)
 
 #SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 #SECURE_HSTS_SECONDS = True
@@ -138,3 +145,4 @@ STATICFILES_DIRS = (
 #CSRF_COOKIE_SECURE = True
 #CSRF_COOKIE_HTTPONLY = True
 X_FRAME_OPTIONS = 'DENY'
+

@@ -16,13 +16,16 @@ import 'rxjs/add/operator/map';
   selector: 'page-blog-list',
   templateUrl: 'blog-list.html',
 })
-export class BlogListPage {  
-
+export class BlogListPage {
+  public blogs;
+  
   constructor(public navCtrl: NavController, public navParams: NavParams, public http: Http) {
-	let url = 'http://localhost:8000/api/blog/';
-	http.get(url)
+	let url: string = 'http://localhost:8000/api/blog/';
+	this.http.get(url)
 	  .map(res => res.json())
-	  .subscribe(data => this.blogs = data);
+	  .subscribe(data => {
+		this.blogs = data;
+	  });
   }
 
   ionViewDidLoad() {
