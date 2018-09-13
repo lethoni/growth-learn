@@ -20,6 +20,7 @@ from homepage.views import index
 from blog.views import blog_list, blog_detail
 
 from rest_framework import routers
+from rest_framework_jwt.views import obtain_jwt_token
 from blog.api import BlogSet
 
 
@@ -32,4 +33,5 @@ urlpatterns = [
     url(r'^blog/$', blog_list),
     url(r'^blog/(?P<slug>[^\.]+).html', blog_detail, name="blog_view"),
     url(r'^api/', include(apiRouter.urls)),
+    url(r'^api-token-auth/', obtain_jwt_token),
     ]

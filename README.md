@@ -794,6 +794,56 @@ API测试可使用[Postman](https://www.getpostman.com/)，提供了一个可视
 
 *CORS_ORIGIN_WHITELIST* 白名单添加的本地地址，在产品环境中不需要，也不需要允许跨域请求。当应用作为移动应用运行时，请求不会遇到这个问题。
 
+**JSON Web Token**：
+
+JWT是为了在网络应用环境间传递声明而执行的一种基于JSON的开放标准，运行机制如下：
+
+- 登录时，客户端向服务器发送用户名和密码
+- 服务器验证是否匹配，成功时返回一个Token
+- 服务器需存储Token，并在以后授权操作中带上这个Token
+- 服务器再验证这个Token是否有效，随后执行相应操作
+
+安装：`pip install djangorestframework-jwt`
+
+配置：urls,settings
+
+其他配置：[官方文档](http://getblimp.github.io/django-rest-framework-jwt/)
+
+```
+# 获取Token的API
+from rest_framework_jwt.views import obtain_jwt_token
+urlpatterns = [
+	# ...
+    url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
+    ]
+
+# 授权配置
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+}
+
+# 设置过期时间，JWT默认过期时间300s
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+}	
+```
+
+设置完后可用Postman或curl命令向服务器发送用户名和密码，获取Token的测试：`curl -H "Content-Type: application/json" -X POST -d '{"username": "root",
+    "password": "admin"}' http://localhost:8000/api-token-auth/`
+	
+> 注意Postman测试时必须是 http://www/ 格式，不然会出500错误
+
+使用上述获取的Token，创建博客，Token放置在Headers中，形式如`Authorization：JWT <your_token>`格式，如示例：`curl -X POST -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2V" -H "Content-Type: application/json" -d '{"title": "test","author": "1","body": "test test","slug": "post-test"}' http://localhost:8000/api-token-auth/`
+
+
+
 
 
 
