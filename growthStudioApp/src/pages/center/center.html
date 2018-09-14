@@ -1,0 +1,35 @@
+<!--
+  Generated template for the CenterPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>center</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+<form (ngSubmit)="loginForm()" [hidden]="isLogin">
+
+<ion-item>
+<ion-label>Username</ion-label>
+<ion-input type="text" [(ngModel)]="user.name" name="name" required></ion-input>
+</ion-item>
+
+<ion-item>
+<ion-label>Password</ion-label>
+<ion-input type="password" [(ngModel)]="user.password" name="password" required></ion-input>
+</ion-item>
+
+<button ion-button type="submit" block>Login</button>
+</form>
+<form [hidden]="!isLogin">
+Write blogs
+</form>
+</ion-content>

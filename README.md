@@ -842,6 +842,44 @@ JWT_AUTH = {
 
 使用上述获取的Token，创建博客，Token放置在Headers中，形式如`Authorization：JWT <your_token>`格式，如示例：`curl -X POST -H "Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2V" -H "Content-Type: application/json" -d '{"title": "test","author": "1","body": "test test","slug": "post-test"}' http://localhost:8000/api-token-auth/`
 
+**存储登陆状态**：
+
+Ionic的Storage组件，用于存储键/值（key/value）的Json对象方式。
+- 运行原生应用，Storage优先使用SQLite存储数据
+- 运行在浏览器或作为Progressive Web App时，将尝试使用IndexedDB(适合大量结构化数据)、WebSQL(基本被丢弃)、localstorage(适合少量数据)
+
+安装：`npm install @ionic/storage --save --save-exact`
+
+配置：
+```
+# app.module.ts
+import { IonicStorageModule } from '@ionic/storage';
+  
+  imports: [
+	IonicStorageModule.forRoot(),
+  ],
+
+# center.ts
+import { Storage } from '@ionic/storage';
+
+export class CenterPage {
+  public isLogin = false;
+  
+  constructor(public navCtrl: NavController, public navParams: NavParams, public http: Http, public storage: Storage) {
+	this.storage.get('token').then((token:any) => {
+	  if(token){
+		this.isLogin = true;
+	  }
+	});
+  }  
+}
+```
+
+设置完后，登陆会获取到token，可在F12下Application中 IndexedDB —— _ionicstorage —— _ionickv 中可看到存储的token值。
+
+
+
+
 
 
 

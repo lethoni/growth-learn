@@ -9,10 +9,12 @@ import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { BlogListPage } from '../pages/blog-list/blog-list';
 import { BlogDetailPage } from '../pages/blog-detail/blog-detail';
+import { CenterPage } from '../pages/center/center';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HttpModule } from '@angular/http';
+import { IonicStorageModule } from '@ionic/storage';
 
 
 @NgModule({
@@ -23,11 +25,13 @@ import { HttpModule } from '@angular/http';
     HomePage,
     TabsPage,
 	BlogListPage,
-	BlogDetailPage
+	BlogDetailPage,
+	CenterPage
   ],
   imports: [
     BrowserModule,
 	HttpModule,
+	IonicStorageModule.forRoot(),
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -38,7 +42,8 @@ import { HttpModule } from '@angular/http';
     HomePage,
     TabsPage,
 	BlogListPage,
-	BlogDetailPage
+	BlogDetailPage,
+	CenterPage
   ],
   providers: [
     StatusBar,
