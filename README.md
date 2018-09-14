@@ -848,7 +848,7 @@ Ionic的Storage组件，用于存储键/值（key/value）的Json对象方式。
 - 运行原生应用，Storage优先使用SQLite存储数据
 - 运行在浏览器或作为Progressive Web App时，将尝试使用IndexedDB(适合大量结构化数据)、WebSQL(基本被丢弃)、localstorage(适合少量数据)
 
-安装：`npm install @ionic/storage --save --save-exact`
+安装：`npm install --save @ionic/storage`
 
 配置：
 ```

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { Http } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Storage } from '@ionic/storage';
 
@@ -23,9 +23,16 @@ export class CenterPage {
 	  name:'',
 	  password:''
 	};
-
+	public blog = {
+	  title:'',
+	  slug:'',
+	  body:''
+	};
+	public token;
+	
   constructor(public navCtrl: NavController, public navParams: NavParams, public http: Http, public storage: Storage) {
 	this.storage.get('token').then((token:any) => {
+	  this.token = token;
 	  if(token){
 		this.isLogin = true;
 	  }
@@ -45,6 +52,29 @@ export class CenterPage {
 	  });
   }
 
+  logout(){
+	this.isLogin = false;
+	this.storage.remove('token');
+  }
+  
+  createBlogForm(){
+	let blogInfo = {
+	  title: this.blog.title,
+      author: 1,
+      body: this.blog.body,
+      slug: this.blog.slug,
+	}
+	
+	let headers = new Headers({'Authorization': 'JWT ' + this.token, 'Content-Type': 'application/json'});
+    let options = new RequestOptions({headers:headers});
+	
+	this.http.post('http://localhost:8000/api/blog/', blogInfo, options)
+	  .map(res => res.json())
+	  .subscribe(data => {
+		console.log(data);
+	  });
+  }
+  
   ionViewDidLoad() {
     console.log('ionViewDidLoad CenterPage');
   }

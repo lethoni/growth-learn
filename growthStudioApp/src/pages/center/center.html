@@ -9,7 +9,7 @@
   <ion-navbar>
     <ion-title>center</ion-title>
   </ion-navbar>
-
+  
 </ion-header>
 
 
@@ -29,7 +29,26 @@
 
 <button ion-button type="submit" block>Login</button>
 </form>
-<form [hidden]="!isLogin">
-Write blogs
+
+<form (ngSubmit)='createBlogForm()' [hidden]="!isLogin">
+<ion-item>
+<ion-label>title</ion-label>
+<ion-input type="text" [(ngModel)]="blog.title" name="title" required></ion-input>
+</ion-item>
+<ion-item>
+<ion-label>Slug</ion-label>
+<ion-input type="text" [(ngModel)]="blog.slug" name="slug" required></ion-input>
+</ion-item>
+<ion-item>
+<ion-label>Content</ion-label>
+<ion-textarea [(ngModel)]="blog.body" name="body" required></ion-textarea>
+</ion-item>
+<button ion-button type="submit" block>Submit</button>
+
+<ion-buttons start [hidden]="!isLogin">
+<button end ion-button color="danger" clear (click)="logout()">Logout</button>
+</ion-buttons>
+
 </form>
+
 </ion-content>
