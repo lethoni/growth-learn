@@ -17,7 +17,11 @@ import 'rxjs/add/operator/map';
   templateUrl: 'blog-detail.html',
 })
 export class BlogDetailPage {
-  public blog={};
+  public blog={
+	title:'',
+	slug:'',
+	body:''
+  };
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public http: Http) {
 	let blogId = navParams.get("blogId");

@@ -4,6 +4,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Storage } from '@ionic/storage';
+import { JwtHelper } from 'angular2-jwt';
+
 
 /**
  * Generated class for the CenterPage page.
@@ -29,6 +31,7 @@ export class CenterPage {
 	  body:''
 	};
 	public token;
+	public jwtHelper = new JwtHelper();
 	
   constructor(public navCtrl: NavController, public navParams: NavParams, public http: Http, public storage: Storage) {
 	this.storage.get('token').then((token:any) => {
@@ -58,9 +61,16 @@ export class CenterPage {
   }
   
   createBlogForm(){
+	if(this.jwtHelper.isTokenExpired(this.token)){
+	  this.isLogin = false;
+	  return;
+	}
+	
+	let decodeToken = this.jwtHelper.decodeToken(this.token);
+	
 	let blogInfo = {
 	  title: this.blog.title,
-      author: 1,
+      author: decodeToken.user_id,
       body: this.blog.body,
       slug: this.blog.slug,
 	}

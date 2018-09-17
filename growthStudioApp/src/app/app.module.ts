@@ -15,6 +15,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HttpModule } from '@angular/http';
 import { IonicStorageModule } from '@ionic/storage';
+import { AUTH_PROVIDERS } from 'angular2-jwt'; 
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import { IonicStorageModule } from '@ionic/storage';
   ],
   providers: [
     StatusBar,
+	AUTH_PROVIDERS,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

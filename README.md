@@ -875,9 +875,57 @@ export class CenterPage {
 }
 ```
 
-设置完后，登陆会获取到token，可在F12下Application中 IndexedDB —— _ionicstorage —— _ionickv 中可看到存储的token值。
+设置完后，登陆会获取到token，可在F12下Application中 IndexedDB —— _ionicstorage —— _ionickv 中可查看存储的token值。
 
+**获取用户ID**：
 
+如何获取：
+
+1. 创建一个新的User API，并发起一个新的HTTP请求
+2. 解码Token，从中获取用户信息
+
+这里采用第二种方法，
+
+安装：`npm install angular2-jwt --save`
+
+配置：
+
+```
+# app.module.ts
+import { AUTH_PROVIDERS } from 'angular2-jwt'; 
+
+providers: [
+  AUTH_PROVIDERS,]
+  
+# center.ts
+import { JwtHelper } from 'angular2-jwt';
+
+export class CenterPage {
+  public jwtHelper = new JwtHelper();
+
+  createBlogForm(){
+	if(this.jwtHelper.isTokenExpired(this.token)){
+	  this.isLogin = false;
+	  return;
+	}
+	
+	let decodeToken = this.jwtHelper.decodeToken(this.token);
+
+	let blogInfo = {
+      author: decodeToken.user_id,
+	}
+  }
+}
+```
+
+使用this.jwtHelper.decodeToken方法解码this.token中的JSON数据。数据格式为：
+
+{
+  'exp':1481210927,
+  'user_id':1,
+  'email':'admin@xx.com',
+  'username':'root'
+}
 
 
 
