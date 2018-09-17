@@ -920,16 +920,29 @@ export class CenterPage {
 
 使用this.jwtHelper.decodeToken方法解码this.token中的JSON数据。数据格式为：
 
+```
 {
   'exp':1481210927,
   'user_id':1,
   'email':'admin@xx.com',
   'username':'root'
 }
+```
 
+**测试和发布应用**：
 
+首先需要在相应的操作系统上安装相应的SDK：
 
+- 测试、发布iOS时，需要在Mac OS上安装XCode，并购买相应的开发者证书
+- 测试、发布Android时，可以在不同平台安装SDK，并申请对应的应用商店的账号，如Google Play、豌豆荚、应用宝等。
 
+添加Android平台支持：`ionic cordova platform add android`
+
+运行：`ionic cordova run android`
+
+构建：`ionic cordova build android`
+
+图标和启动页图片：`ionic resources --icon` （只需保存icon.png、icon.psd及icon.ai到resources目录，最小大小192px X 192px，无圆角，启动页图片一样将icon改为splash）
 
 
 
